@@ -37,7 +37,6 @@
             cursor: pointer; 
             box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
         }
-        /* Style for the model selection dropdown */
         #model-select {
             position: absolute;
             top: 20px;
@@ -57,16 +56,16 @@
 </head>
 <body>
 
-    <!-- Dropdown menu to pick models -->
+    <!-- Dropdown menu matching exact file names -->
     <select id="model-select">
-        <option value="model1.glb">Model 1</WHITE SOFA MEDIUM SIZE.glb>
-        <option value="model2.glb">Model 2</option>
-        <option value="model3.glb">Model 3</option>
+        <option value="WHITE SOFA MEDIUM SIZE.glb">White Sofa (Medium)</option>
+        <!-- Add more options here as you upload new .glb files -->
+        <!-- Example: <option value="ANOTHER_FILE_NAME.glb">Second Model</option> -->
     </select>
 
     <model-viewer 
         id="viewer"
-        src="model1.glb" 
+        src="WHITE SOFA MEDIUM SIZE.glb" 
         ar 
         ar-modes="webxr scene-viewer quick-look" 
         camera-controls 
@@ -79,7 +78,6 @@
         const viewer = document.getElementById('viewer');
         const select = document.getElementById('model-select');
 
-        // Update the viewer's src attribute whenever a new option is chosen
         select.addEventListener('change', (event) => {
             viewer.src = event.target.value;
         });
