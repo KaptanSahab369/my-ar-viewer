@@ -4,18 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D WebAR Viewer</title>
-    <script type="module" src="https://googleapis.com"></script>
+    
+    <!-- Official Model Viewer Script -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #f7f7f7; font-family: sans-serif; }
-        model-viewer { width: 100%; height: 100%; }
-        #ar-button { background-color: #007bff; color: white; border: none; border-radius: 20px; padding: 12px 24px; font-size: 16px; font-weight: bold; position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden; 
+            background-color: #f7f7f7; 
+            font-family: sans-serif; 
+        }
+        model-viewer { 
+            width: 100%; 
+            height: 100%; 
+        }
+        #ar-button { 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 20px; 
+            padding: 12px 24px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            position: absolute; 
+            bottom: 30px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            cursor: pointer; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+        }
+        /* Style for the model selection dropdown */
+        #model-select {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 16px;
+            font-size: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            outline: none;
+            cursor: pointer;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
 
-    <!-- This streams your model securely without download interfaces -->
+    <!-- Dropdown menu to pick models -->
+    <select id="model-select">
+        <option value="model1.glb">Model 1</option>
+        <option value="model2.glb">Model 2</option>
+        <option value="model3.glb">Model 3</option>
+    </select>
+
     <model-viewer 
-        src="YOUR_DIRECT_GOOGLE_DRIVE_LINK" 
+        id="viewer"
+        src="model1.glb" 
         ar 
         ar-modes="webxr scene-viewer quick-look" 
         camera-controls 
@@ -23,6 +74,16 @@
         alt="A 3D Model">
         <button slot="ar-button" id="ar-button">✨ View in your Space</button>
     </model-viewer>
+
+    <script>
+        const viewer = document.getElementById('viewer');
+        const select = document.getElementById('model-select');
+
+        // Update the viewer's src attribute whenever a new option is chosen
+        select.addEventListener('change', (event) => {
+            viewer.src = event.target.value;
+        });
+    </script>
 
 </body>
 </html>
