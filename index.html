@@ -56,13 +56,12 @@
 </head>
 <body>
 
-    <!-- Dropdown menu with corrected values and labels -->
+    <!-- Dropdown menu -->
     <select id="model-select">
         <option value="WHITE SOFA MEDIUM SIZE.glb">White Sofa (Medium)</option>
         <option value="RED SOFA.glb">Red Sofa</option>
     </select>
 
-    <!-- Updated model-viewer with floor anchoring & native AR priorities -->
     <model-viewer 
         id="viewer"
         src="WHITE SOFA MEDIUM SIZE.glb" 
@@ -79,6 +78,24 @@
         const viewer = document.getElementById('viewer');
         const select = document.getElementById('model-select');
 
+        // 1. Check for 'model' parameter in the URL when the page loads
+        const urlParams = new URLSearchParams(window.location.search);
+        const modelParam = urlParams.get('model');
+
+        if (modelParam) {
+            // Set the viewer source to the requested model
+            viewer.src = modelParam;
+            select.value = modelParam;
+
+            // Automatically trigger AR mode once the model finishes loading
+            viewer.addEventListener('load', () => {
+                if (viewer.canActivateAR) {
+                    viewer.activateAR();
+                }
+            }, { once: true });
+        }
+
+        // 2. Dropdown manual switch
         select.addEventListener('change', (event) => {
             viewer.src = event.target.value;
         });
