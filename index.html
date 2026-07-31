@@ -28,7 +28,7 @@
             --poster-color: transparent;
         }
 
-        /* Floating Model Dropdown Select */
+        /* Model Switcher Dropdown */
         #model-select {
             position: absolute;
             top: 16px;
@@ -48,7 +48,7 @@
             max-width: 90%;
         }
 
-        /* AR Trigger Button - Pinned cleanly at the bottom */
+        /* AR Launch Button */
         #ar-button { 
             background-color: #007bff; 
             color: white; 
@@ -65,15 +65,9 @@
             box-shadow: 0 6px 16px rgba(0, 123, 255, 0.35); 
             z-index: 10;
             white-space: nowrap;
-            transition: transform 0.2s ease, background-color 0.2s ease;
         }
 
-        #ar-button:active {
-            transform: translateX(-50%) scale(0.96);
-            background-color: #0056b3;
-        }
-
-        /* Hide selection dropdown when accessed via a direct model parameter link */
+        /* Hide selection dropdown when opened via a direct model parameter link */
         body.direct-ar #model-select {
             display: none !important;
         }
@@ -81,16 +75,17 @@
 </head>
 <body>
 
-    <!-- Model Switcher Dropdown -->
+    <!-- Dropdown list -->
     <select id="model-select">
-        <option value="WHITE SOFA MEDIUM SIZE.glb">White Sofa (Medium)</option>
-        <option value="RED SOFA.glb">Red Sofa</option>
+        <option value="WHITE SOFA MEDIUM SIZE">White Sofa (Medium)</option>
+        <option value="RED SOFA">Red Sofa</option>
     </select>
 
-    <!-- AR Viewer Component -->
+    <!-- Universal WebAR Viewer -->
     <model-viewer 
         id="viewer"
         src="WHITE SOFA MEDIUM SIZE.glb" 
+        ios-src="WHITE SOFA MEDIUM SIZE.usdz"
         ar 
         ar-placement="floor"
         ar-modes="scene-viewer quick-look webxr" 
@@ -107,20 +102,25 @@
         const viewer = document.getElementById('viewer');
         const select = document.getElementById('model-select');
 
-        // Check for URL parameters (?model=...)
+        // Check for URL parameters (?model=NAME)
         const urlParams = new URLSearchParams(window.location.search);
         const modelParam = urlParams.get('model');
 
         if (modelParam) {
             document.body.classList.add('direct-ar');
-            const decodedModel = decodeURIComponent(modelParam);
-            viewer.src = decodedModel;
-            select.value = decodedModel;
+            const modelName = decodeURIComponent(modelParam).replace(/\.(glb|usdz)$/i, '');
+            
+            // Set GLB for Android / Web & USDZ for iOS
+            viewer.src = modelName + '.glb';
+            viewer.iosSrc = modelName + '.usdz';
+            select.value = modelName;
         }
 
-        // Handle dropdown selection changes
+        // Dropdown menu switch
         select.addEventListener('change', (event) => {
-            viewer.src = event.target.value;
+            const modelName = event.target.value;
+            viewer.src = modelName + '.glb';
+            viewer.iosSrc = modelName + '.usdz';
         });
     </script>
 
