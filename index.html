@@ -26,17 +26,19 @@
             background-color: #007bff; 
             color: white; 
             border: none; 
-            border-radius: 20px; 
-            padding: 12px 24px; 
-            font-size: 16px; 
+            border-radius: 25px; 
+            padding: 16px 32px; 
+            font-size: 18px; 
             font-weight: bold; 
             position: absolute; 
-            bottom: 30px; 
+            bottom: 40px; 
             left: 50%; 
             transform: translateX(-50%); 
             cursor: pointer; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25); 
+            z-index: 20;
         }
+
         #model-select {
             position: absolute;
             top: 20px;
@@ -51,6 +53,21 @@
             outline: none;
             cursor: pointer;
             z-index: 10;
+        }
+
+        /* Direct Mode styling to conceal the 3D model view */
+        body.direct-ar model-viewer::part(canvas) {
+            display: none !important;
+        }
+        body.direct-ar #model-select {
+            display: none !important;
+        }
+        body.direct-ar #ar-button {
+            top: 50%;
+            bottom: auto;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            font-size: 20px;
         }
     </style>
 </head>
@@ -78,24 +95,20 @@
         const viewer = document.getElementById('viewer');
         const select = document.getElementById('model-select');
 
-        // 1. Check for 'model' parameter in the URL when the page loads
+        // Parse direct URL parameter
         const urlParams = new URLSearchParams(window.location.search);
         const modelParam = urlParams.get('model');
 
         if (modelParam) {
-            // Set the viewer source to the requested model
-            viewer.src = modelParam;
-            select.value = modelParam;
-
-            // Automatically trigger AR mode once the model finishes loading
-            viewer.addEventListener('load', () => {
-                if (viewer.canActivateAR) {
-                    viewer.activateAR();
-                }
-            }, { once: true });
+            // Apply direct AR mode styling
+            document.body.classList.add('direct-ar');
+            
+            // Set source
+            viewer.src = decodeURIComponent(modelParam);
+            select.value = decodeURIComponent(modelParam);
         }
 
-        // 2. Dropdown manual switch
+        // Dropdown selection listener
         select.addEventListener('change', (event) => {
             viewer.src = event.target.value;
         });
